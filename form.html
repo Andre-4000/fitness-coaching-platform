@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Your Personalized Fitness Plan | EliteFit</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FF6B00',
+                        secondary: '#1a1a1a',
+                    },
+                    fontFamily: {
+                        'display': ['Bebas Neue', 'cursive'],
+                        'sans': ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #FF6B00 0%, #FF8C00 100%);
+        }
+
+        .input-focus:focus {
+            border-color: #FF6B00;
+            box-shadow: 0 0 0 3px rgba(255, 107, 0, 0.1);
+        }
+
+        .radio-card {
+            transition: all 0.3s ease;
+        }
+
+        .radio-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .radio-card input:checked + label {
+            border-color: #FF6B00;
+            background-color: #FFF5F0;
+            box-shadow: 0 5px 20px rgba(255, 107, 0, 0.2);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        .progress-bar {
+            transition: width 0.4s ease;
+        }
+
+        .section-number {
+            background: linear-gradient(135deg, #FF6B00 0%, #FF8C00 100%);
+            box-shadow: 0 4px 12px rgba(255, 107, 0, 0.3);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans antialiased">
+    <!-- Header -->
+    <header class="bg-secondary shadow-2xl sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
+            <div class="flex items-center justify-between">
+                <a href="index.html" class="text-3xl font-display font-bold text-white tracking-wider">
+                    ELITE<span class="text-primary">FIT</span>
+                </a>
+                <div class="flex items-center space-x-2 text-sm">
+                    <svg class="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                    </svg>
+                    <span class="font-bold text-white uppercase tracking-wide">Secure & Confidential</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <!-- Hero Section -->
+        <div class="text-center mb-16 fade-in">
+            <h1 class="text-5xl md:text-7xl font-display font-bold text-secondary mb-6 tracking-tight leading-none">
+                GET YOUR PERSONALIZED<br><span class="text-primary">TRAINING PLAN</span>
+            </h1>
+            <p class="text-xl md:text-2xl text-gray-700 mb-4 font-semibold">
+                Tell us about yourself and our expert coaches will design a custom training and nutrition plan just for you
+            </p>
+            <p class="text-base text-gray-600 flex items-center justify-center space-x-2 font-medium">
+                <svg class="w-5 h-5 text-primary" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
+                </svg>
+                <span>Takes only 3-5 minutes to complete</span>
+            </p>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="mb-10 bg-white rounded-xl shadow-xl p-6 border-2 border-gray-200">
+            <div class="flex justify-between items-center mb-3">
+                <span class="text-sm font-bold text-secondary uppercase tracking-wide">Completion Progress</span>
+                <span class="text-xl font-bold text-primary" id="progress-text">0%</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-3 shadow-inner">
+                <div id="progress-bar" class="progress-bar gradient-bg h-3 rounded-full shadow-lg" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <!-- Form Container -->
+        <div class="bg-white rounded-2xl shadow-2xl p-8 md:p-12 fade-in border-2 border-gray-100">
+            <form id="fitness-form" novalidate>
+                <!-- Personal Information Section -->
+                <div class="mb-12">
+                    <h2 class="text-4xl font-display font-bold text-secondary mb-8 flex items-center tracking-wide">
+                        <span class="section-number w-12 h-12 text-white rounded-full flex items-center justify-center mr-4 text-2xl">1</span>
+                        PERSONAL INFORMATION
+                    </h2>
+
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <!-- Full Name -->
+                        <div>
+                            <label for="fullName" class="block text-sm font-bold text-secondary mb-2 uppercase tracking-wide">
+                                Full Name <span class="text-primary">*</span>
+                            </label>
+                            <input
+                                type="text"
+                                id="fullName"
+                                name="fullName"
+                                required
+                                class="w-full px-4 py-4 border-2 border-gray-300 rounded-lg input-focus outline-none transition font-semibold"
+                                placeholder="John Doe"
+                            >
+                            <p class="text-red-600 text-sm mt-2 font-semibold hidden" id="fullName-error">Please enter your full name</p>
+                        </div>
+
+                        <!-- Email -->
+                        <div>
+                            <label for="email" class="block text-sm font-bold text-secondary mb-2 uppercase tracking-wide">
+                                Email Address <span class="text-primary">*</span>
+                            </label>
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                required
+                                class="w-full px-4 py-4 border-2 border-gray-300 rounded-lg input-focus outline-none transition font-semibold"
+                                placeholder="john@example.com"
+                            >
+                            <p class="text-red-600 text-sm mt-2 font-semibold hidden" id="email-error">Please enter a valid email address</p>
+                        </div>
+
+                        <!-- Age -->
+                        <div>
+                            <label for="age" class="block text-sm font-bold text-secondary mb-2 uppercase tracking-wide">
+                                Age <span class="text-primary">*</span>
+                            </label>
+                            <input
+                                type="number"
+                                id="age"
+                                name="age"
+                                required
+                                min="16"
+                                max="100"
+                                class="w-full px-4 py-4 border-2 border-gray-300 rounded-lg input-focus outline-none transition font-semibold"
+                                placeholder="25"
+                            >
+                            <p class="text-red-600 text-sm mt-2 font-semibold hidden" id="age-error">Please enter your age (16-100)</p>
+                        </div>
+
+                        <!-- Weekly Availability -->
+                        <div>
+                            <label for="weeklyHours" class="block text-sm font-bold text-secondary mb-2 uppercase tracking-wide">
+                                Weekly Workout Availability (hours) <span class="text-primary">*</span>
+                            </label>
+                            <input
+                                type="number"
+                                id="weeklyHours"
+                                name="weeklyHours"
+                                required
+                                min="1"
+                                max="20"
+                                step="0.5"
+                                class="w-full px-4 py-4 border-2 border-gray-300 rounded-lg input-focus outline-none transition font-semibold"
+                                placeholder="5"
+                            >
+                            <p class="text-gray-600 text-xs mt-2 font-medium">How many hours per week can you dedicate to workouts?</p>
+                            <p class="text-red-600 text-sm mt-1 font-semibold hidden" id="weeklyHours-error">Please enter hours (1-20)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Fitness Information Section -->
+                <div class="mb-12">
+                    <h2 class="text-4xl font-display font-bold text-secondary mb-8 flex items-center tracking-wide">
+                        <span class="section-number w-12 h-12 text-white rounded-full flex items-center justify-center mr-4 text-2xl">2</span>
+                        FITNESS BACKGROUND
+                    </h2>
+
+                    <!-- Fitness Level -->
+                    <div class="mb-8">
+                        <label class="block text-sm font-bold text-secondary mb-4 uppercase tracking-wide">
+                            Current Fitness Level <span class="text-primary">*</span>
+                        </label>
+                        <div class="grid md:grid-cols-3 gap-4">
+                            <div class="radio-card">
+                                <input type="radio" id="beginner" name="fitnessLevel" value="beginner" required class="peer hidden">
+                                <label for="beginner" class="block p-6 border-3 border-gray-300 rounded-xl cursor-pointer hover:border-primary transition">
+                                    <div class="flex items-start">
+                                        <div class="flex-shrink-0">
+                                            <svg class="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                            </svg>
+                                        </div>
+                                        <div class="ml-4">
+                                            <h3 class="font-bold text-lg text-secondary">Beginner</h3>
+                                            <p class="text-sm text-gray-600 font-medium">New to fitness or getting back after a break</p>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+
+                            <div class="radio-card">
+                                <input type="radio" id="intermediate" name="fitnessLevel" value="intermediate" class="peer hidden">
+                                <label for="intermediate" class="block p-6 border-3 border-gray-300 rounded-xl cursor-pointer hover:border-primary transition">
+                                    <div class="flex items-start">
+                                        <div class="flex-shrink-0">
+                                            <svg class="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                                            </svg>
+                                        </div>
+                                        <div class="ml-4">
+                                            <h3 class="font-bold text-lg text-secondary">Intermediate</h3>
+                                            <p class="text-sm text-gray-600 font-medium">Regular workouts for 6+ months</p>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+
+                            <div class="radio-card">
+                                <input type="radio" id="advanced" name="fitnessLevel" value="advanced" class="peer hidden">
+                                <label for="advanced" class="block p-6 border-3 border-gray-300 rounded-xl cursor-pointer hover:border-primary transition">
+                                    <div class="flex items-start">
+                                        <div class="flex-shrink-0">
+                                            <svg class="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
+                                            </svg>
+                                        </div>
+                                        <div class="ml-4">
+                                            <h3 class="font-bold text-lg text-secondary">Advanced</h3>
+                                            <p class="text-sm text-gray-600 font-medium">Experienced athlete or trainer</p>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                        <p class="text-red-600 text-sm mt-3 font-semibold hidden" id="fitnessLevel-error">Please select your fitness level</p>
+                    </div>
+
+                    <!-- Available Equipment -->
+                    <div class="mb-8">
+                        <label for="available_equipment" class="block text-sm font-bold text-secondary mb-2 uppercase tracking-wide">
+                            Available Equipment <span class="text-primary">*</span>
+                        </label>
+                        <select
+                            id="available_equipment"
+                            name="available_equipment"
+                            required
+                            class="w-full px-4 py-4 border-2 border-gray-300 rounded-lg input-focus outline-none transition font-semibold"
+                        >
+                            <option value="">Select your available equipment</option>
+                            <option value="full_gym">Full Commercial Gym - Access to all machines and free weights</option>
+                            <option value="home_equipped">Well-Equipped Home Gym - Barbell, dumbbells, bench, rack</option>
+                            <option value="home_basic">Basic Home Gym - Dumbbells, resistance bands, mat</option>
+                            <option value="minimal">Minimal Equipment - Resistance bands, bodyweight</option>
+                            <option value="bodyweight">Bodyweight Only - No equipment</option>
+                            <option value="outdoor">Outdoor/Park Training - Pull-up bars, open space</option>
+                            <option value="apartment">Apartment Friendly - Quiet exercises, no jumping</option>
+                            <option value="hotel">Hotel Gym - Basic machines and dumbbells</option>
+                        </select>
+                        <p class="text-gray-600 text-xs mt-2 font-medium">Our coaches will tailor your workouts to your available equipment</p>
+                        <p class="text-red-600 text-sm mt-1 font-semibold hidden" id="available_equipment-error">Please select your available equipment</p>
+                    </div>
+
+                    <!-- Training Days Per Week -->
+                    <div class="mb-8">
+                        <label for="training_days" class="block text-sm font-bold text-secondary mb-2 uppercase tracking-wide">
+                            Training Days Per Week <span class="text-primary">*</span>
+                        </label>
+                        <select
+                            id="training_days"
+                            name="training_days"
+                            required
+                            class="w-full px-4 py-4 border-2 border-gray-300 rounded-lg input-focus outline-none transition font-semibold"
+                        >
+                            <option value="">Select training frequency</option>
+                            <option value="2-3">2-3 days per week</option>
+                            <option value="4-5">4-5 days per week</option>
+                            <option value="6-7">6-7 days per week</option>
+                            <option value="flexible">Flexible schedule</option>
+                        </select>
+                        <p class="text-gray-600 text-xs mt-2 font-medium">How many days per week can you train?</p>
+                        <p class="text-red-600 text-sm mt-1 font-semibold hidden" id="training_days-error">Please select your training frequency</p>
+                    </div>
+
+                    <!-- Primary Training Goal -->
+                    <div class="mb-8">
+                        <label for="primary_goal" class="block text-sm font-bold text-secondary mb-2 uppercase tracking-wide">
+                            Primary Training Goal <span class="text-primary">*</span>
+                        </label>
+                        <select
+                            id="primary_goal"
+                            name="primary_goal"
+                            required
+                            class="w-full px-4 py-4 border-2 border-gray-300 rounded-lg input-focus outline-none transition font-semibold"
+                        >
+                            <option value="">Select your primary goal</option>
+                            <option value="strength">Strength & Power</option>
+                            <option value="hypertrophy">Muscle Building (Hypertrophy)</option>
+                            <option value="fat_loss">Fat Loss & Definition</option>
+                            <option value="endurance">Endurance & Conditioning</option>
+                            <option value="athletic">Athletic Performance</option>
+                            <option value="rehabilitation">Rehabilitation & Recovery</option>
+                            <option value="general">General Fitness & Health</option>
+                            <option value="functional">Functional Fitness</option>
+                        </select>
+                        <p class="text-red-600 text-sm mt-1 font-semibold hidden" id="primary_goal-error">Please select your primary training goal</p>
+                    </div>
+
+                    <!-- Secondary Goal -->
+                    <div class="mb-8">
+                        <label for="secondary_goal" class="block text-sm font-bold text-secondary mb-2 uppercase tracking-wide">
+                            Secondary Goal (Optional)
+                        </label>
+                        <select
+                            id="secondary_goal"
+                            name="secondary_goal"
+                            class="w-full px-4 py-4 border-2 border-gray-300 rounded-lg input-focus outline-none transition font-semibold"
+                        >
+                            <option value="none">None / Primary goal only</option>
+                            <option value="strength">Strength & Power</option>
+                            <option value="hypertrophy">Muscle Building (Hypertrophy)</option>
+                            <option value="fat_loss">Fat Loss & Definition</option>
+                            <option value="endurance">Endurance & Conditioning</option>
+                            <option value="athletic">Athletic Performance</option>
+                            <option value="rehabilitation">Rehabilitation & Recovery</option>
+                            <option value="general">General Fitness & Health</option>
+                            <option value="functional">Functional Fitness</option>
+                        </select>
+                    </div>
+
+                    <!-- Additional Details -->
+                    <div class="mb-8">
+                        <label for="additional_details" class="block text-sm font-bold text-secondary mb-2 uppercase tracking-wide">
+                            Tell Us More (Optional)
+                        </label>
+                        <textarea
+                            id="additional_details"
+                            name="additional_details"
+                            rows="5"
+                            class="w-full px-4 py-4 border-2 border-gray-300 rounded-lg input-focus outline-none transition resize-none font-medium"
+                            placeholder="Share any additional details about your fitness journey, specific limitations, past injuries, competition goals, or anything else that will help us customize your program perfectly..."
+                        ></textarea>
+                        <p class="text-gray-600 text-xs mt-2 font-medium">The more details you share, the better we can personalize your program</p>
+                    </div>
+
+                </div>
+
+                <!-- Health Information Section -->
+                <div class="mb-12">
+                    <h2 class="text-4xl font-display font-bold text-secondary mb-8 flex items-center tracking-wide">
+                        <span class="section-number w-12 h-12 text-white rounded-full flex items-center justify-center mr-4 text-2xl">3</span>
+                        HEALTH & LIFESTYLE
+                    </h2>
+
+                    <!-- Injuries/Limitations -->
+                    <div class="mb-8">
+                        <label for="injuries" class="block text-sm font-bold text-secondary mb-2 uppercase tracking-wide">
+                            Any Injuries or Physical Limitations?
+                        </label>
+                        <textarea
+                            id="injuries"
+                            name="injuries"
+                            rows="5"
+                            class="w-full px-4 py-4 border-2 border-gray-300 rounded-lg input-focus outline-none transition resize-none font-medium"
+                            placeholder="e.g., Lower back pain, knee injury, shoulder issues, etc. (Leave blank if none)"
+                        ></textarea>
+                        <p class="text-gray-600 text-xs mt-2 font-medium">This helps our coaches create a safe workout plan tailored to your needs</p>
+                    </div>
+
+                    <!-- Dietary Restrictions -->
+                    <div class="mb-8">
+                        <label for="dietary" class="block text-sm font-bold text-secondary mb-2 uppercase tracking-wide">
+                            Dietary Restrictions or Allergies
+                        </label>
+                        <textarea
+                            id="dietary"
+                            name="dietary"
+                            rows="5"
+                            class="w-full px-4 py-4 border-2 border-gray-300 rounded-lg input-focus outline-none transition resize-none font-medium"
+                            placeholder="e.g., Vegetarian, vegan, gluten-free, nut allergy, lactose intolerant, etc. (Leave blank if none)"
+                        ></textarea>
+                        <p class="text-gray-600 text-xs mt-2 font-medium">Our nutrition experts will customize your meal plan based on your dietary needs</p>
+                    </div>
+                </div>
+
+                <!-- Trust Signals -->
+                <div class="bg-orange-50 border-2 border-primary rounded-xl p-6 mb-10 shadow-lg">
+                    <div class="flex items-start">
+                        <svg class="w-8 h-8 text-primary mr-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                        </svg>
+                        <div>
+                            <h4 class="font-bold text-secondary mb-2 text-lg uppercase tracking-wide">Your Privacy Matters</h4>
+                            <p class="text-sm text-gray-700 font-medium">Your information is encrypted and secure. We never share your personal data with third parties.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="text-center">
+                    <button
+                        type="submit"
+                        class="w-full md:w-auto gradient-bg text-white px-16 py-5 rounded-lg font-display text-2xl tracking-wide hover:shadow-2xl transition-all transform hover:scale-105 shadow-xl uppercase"
+                    >
+                        Get My Personalized Plan
+                    </button>
+                    <p class="text-sm text-gray-600 mt-6 font-medium">
+                        By submitting, you agree to receive your personalized fitness plan via email
+                    </p>
+                </div>
+            </form>
+        </div>
+
+        <!-- Additional Trust Elements -->
+        <div class="mt-16 grid md:grid-cols-3 gap-8 text-center">
+            <div class="fade-in bg-white p-8 rounded-xl shadow-lg border-2 border-gray-100 hover:shadow-2xl transition">
+                <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 shadow-md">
+                    <svg class="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <h3 class="font-bold text-secondary mb-2 text-lg uppercase tracking-wide">Expert Coaches</h3>
+                <p class="text-sm text-gray-700 font-medium">Certified professionals with 10+ years experience</p>
+            </div>
+
+            <div class="fade-in bg-white p-8 rounded-xl shadow-lg border-2 border-gray-100 hover:shadow-2xl transition" style="animation-delay: 0.1s">
+                <div class="w-20 h-20 bg-primary bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-4 shadow-md">
+                    <svg class="w-10 h-10 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                    </svg>
+                </div>
+                <h3 class="font-bold text-secondary mb-2 text-lg uppercase tracking-wide">50,000+ Transformations</h3>
+                <p class="text-sm text-gray-700 font-medium">Join thousands who achieved their fitness goals</p>
+            </div>
+
+            <div class="fade-in bg-white p-8 rounded-xl shadow-lg border-2 border-gray-100 hover:shadow-2xl transition" style="animation-delay: 0.2s">
+                <div class="w-20 h-20 bg-secondary bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-4 shadow-md">
+                    <svg class="w-10 h-10 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                    </svg>
+                </div>
+                <h3 class="font-bold text-secondary mb-2 text-lg uppercase tracking-wide">Money-Back Guarantee</h3>
+                <p class="text-sm text-gray-700 font-medium">30-day full refund if not satisfied</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="hidden fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 px-4">
+        <div class="bg-white rounded-2xl p-10 max-w-md w-full text-center fade-in shadow-2xl">
+            <div class="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+                <svg class="w-12 h-12 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                </svg>
+            </div>
+            <h2 class="text-4xl font-display font-bold text-secondary mb-5 uppercase tracking-wide">Success!</h2>
+            <p class="text-gray-700 mb-8 font-medium text-lg">
+                Your personalized fitness plan is being created by our expert coaches. Check your email in the next few minutes for your complete program.
+            </p>
+            <button onclick="closeModal()" class="gradient-bg text-white px-10 py-4 rounded-lg font-bold text-lg hover:shadow-2xl transition transform hover:scale-105 uppercase tracking-wide">
+                Done
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Form validation and submission
+        const form = document.getElementById('fitness-form');
+        const progressBar = document.getElementById('progress-bar');
+        const progressText = document.getElementById('progress-text');
+        const successModal = document.getElementById('successModal');
+
+        // Track form completion
+        const formFields = [
+            'fullName', 'email', 'age', 'weeklyHours',
+            'fitnessLevel', 'available_equipment', 'training_days', 'primary_goal'
+        ];
+
+        function updateProgress() {
+            let completed = 0;
+            const total = formFields.length;
+
+            formFields.forEach(fieldName => {
+                const field = document.querySelector(`[name="${fieldName}"]`);
+                if (field) {
+                    if (field.type === 'radio') {
+                        const checked = document.querySelector(`[name="${fieldName}"]:checked`);
+                        if (checked) completed++;
+                    } else if (field.value.trim() !== '') {
+                        completed++;
+                    }
+                }
+            });
+
+            const percentage = Math.round((completed / total) * 100);
+            progressBar.style.width = percentage + '%';
+            progressText.textContent = percentage + '%';
+        }
+
+        // Add event listeners to track progress
+        form.addEventListener('input', updateProgress);
+        form.addEventListener('change', updateProgress);
+
+        // Form validation
+        function validateField(fieldId, errorId, validationFn) {
+            const field = document.getElementById(fieldId);
+            const error = document.getElementById(errorId);
+
+            if (!validationFn(field)) {
+                error.classList.remove('hidden');
+                field.classList.add('border-red-500');
+                return false;
+            } else {
+                error.classList.add('hidden');
+                field.classList.remove('border-red-500');
+                return true;
+            }
+        }
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            let isValid = true;
+
+            // Validate full name
+            isValid &= validateField('fullName', 'fullName-error',
+                field => field.value.trim().length >= 2
+            );
+
+            // Validate email
+            isValid &= validateField('email', 'email-error',
+                field => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(field.value)
+            );
+
+            // Validate age
+            isValid &= validateField('age', 'age-error',
+                field => field.value >= 16 && field.value <= 100
+            );
+
+            // Validate weekly hours
+            isValid &= validateField('weeklyHours', 'weeklyHours-error',
+                field => field.value >= 1 && field.value <= 20
+            );
+
+            // Validate available equipment
+            isValid &= validateField('available_equipment', 'available_equipment-error',
+                field => field.value !== ''
+            );
+
+            // Validate training days
+            isValid &= validateField('training_days', 'training_days-error',
+                field => field.value !== ''
+            );
+
+            // Validate primary goal
+            isValid &= validateField('primary_goal', 'primary_goal-error',
+                field => field.value !== ''
+            );
+
+            // Validate fitness level
+            const fitnessLevel = document.querySelector('[name="fitnessLevel"]:checked');
+            const fitnessError = document.getElementById('fitnessLevel-error');
+            if (!fitnessLevel) {
+                fitnessError.classList.remove('hidden');
+                isValid = false;
+            } else {
+                fitnessError.classList.add('hidden');
+            }
+
+            if (isValid) {
+                // Collect form data
+                const formData = {
+                    fullName: document.getElementById('fullName').value,
+                    email: document.getElementById('email').value,
+                    age: document.getElementById('age').value,
+                    weeklyHours: document.getElementById('weeklyHours').value,
+                    fitnessLevel: fitnessLevel.value,
+                    available_equipment: document.getElementById('available_equipment').value,
+                    training_days: document.getElementById('training_days').value,
+                    primary_goal: document.getElementById('primary_goal').value,
+                    secondary_goal: document.getElementById('secondary_goal').value,
+                    additional_details: document.getElementById('additional_details').value,
+                    injuries: document.getElementById('injuries').value,
+                    dietary: document.getElementById('dietary').value
+                };
+
+                // Here you would send the data to your backend
+                console.log('Form submitted:', formData);
+
+                // Show success modal
+                successModal.classList.remove('hidden');
+
+                // Reset form
+                form.reset();
+                updateProgress();
+            } else {
+                // Scroll to first error
+                const firstError = document.querySelector('.border-red-500, .text-red-600:not(.hidden)');
+                if (firstError) {
+                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+        });
+
+        function closeModal() {
+            successModal.classList.add('hidden');
+            window.location.href = 'index.html';
+        }
+
+        // Close modal on background click
+        successModal.addEventListener('click', function(e) {
+            if (e.target === successModal) {
+                closeModal();
+            }
+        });
+
+        // Initialize progress
+        updateProgress();
+    </script>
+</body>
+</html>
