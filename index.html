@@ -583,7 +583,11 @@
                 <h2 class="text-5xl md:text-6xl font-display font-bold text-secondary mb-4 tracking-tight">START YOUR TRANSFORMATION TODAY</h2>
                 <p class="text-xl text-gray-700 font-semibold">Fill out the form below and receive your personalized plan instantly</p>
             </div>
-            <form id="contact-form" class="bg-white p-8 md:p-12 rounded-lg shadow-2xl border-4 border-primary">
+            <form id="contact-form" action="https://api.web3forms.com/submit" method="POST" class="bg-white p-8 md:p-12 rounded-lg shadow-2xl border-4 border-primary">
+                <!-- Web3Forms Hidden Inputs -->
+                <input type="hidden" name="access_key" value="08c98faa-dd03-4942-8609-3bfd97d86540">
+                <input type="hidden" name="redirect" value="https://andre-4000.github.io/fitness-coaching-platform/thank-you.html">
+                <input type="hidden" name="webhook" value="https://andstrom.app.n8n.cloud/webhook-test/d6aeec63-4a10-4566-9d0a-6315ed7554a8">
                 <div class="grid md:grid-cols-2 gap-6 mb-6">
                     <div>
                         <label for="name" class="block text-sm font-bold text-secondary mb-2 uppercase">Full Name *</label>

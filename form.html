@@ -123,7 +123,11 @@
 
         <!-- Form Container -->
         <div class="bg-white rounded-2xl shadow-2xl p-8 md:p-12 fade-in border-2 border-gray-100">
-            <form id="fitness-form" novalidate>
+            <form id="fitness-form" action="https://api.web3forms.com/submit" method="POST" novalidate>
+                <!-- Web3Forms Hidden Inputs -->
+                <input type="hidden" name="access_key" value="08c98faa-dd03-4942-8609-3bfd97d86540">
+                <input type="hidden" name="redirect" value="https://andre-4000.github.io/fitness-coaching-platform/thank-you.html">
+                <input type="hidden" name="webhook" value="https://andstrom.app.n8n.cloud/webhook-test/d6aeec63-4a10-4566-9d0a-6315ed7554a8">
                 <!-- Personal Information Section -->
                 <div class="mb-12">
                     <h2 class="text-4xl font-display font-bold text-secondary mb-8 flex items-center tracking-wide">
