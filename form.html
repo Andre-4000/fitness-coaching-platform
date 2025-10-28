@@ -123,13 +123,7 @@
 
         <!-- Form Container -->
         <div class="bg-white rounded-2xl shadow-2xl p-8 md:p-12 fade-in border-2 border-gray-100">
-            <form id="fitness-form" action="https://api.web3forms.com/submit" method="POST" novalidate>
-                <!-- Web3Forms Hidden Inputs -->
-                <input type="hidden" name="access_key" value="08c98faa-dd03-4942-8609-3bfd97d86540">
-                <input type="hidden" name="subject" value="New Fitness Coaching Form Submission">
-                <input type="hidden" name="from_name" value="Fitness Coaching Platform">
-                <input type="hidden" name="redirect" value="https://andre-4000.github.io/fitness-coaching-platform/thank-you">
-                <input type="hidden" name="webhook" value="https://andstrom.app.n8n.cloud/webhook-test/d6aeec63-4a10-4566-9d0a-6315ed7554a8">
+            <form id="fitness-form" novalidate>
                 <!-- Personal Information Section -->
                 <div class="mb-12">
                     <h2 class="text-4xl font-display font-bold text-secondary mb-8 flex items-center tracking-wide">
@@ -557,8 +551,10 @@
             }
         }
 
-        // Form submission with validation
-        form.addEventListener('submit', function(e) {
+        // Form submission with validation - direct to n8n webhook
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
             console.log('🚀 Form submission started');
             let isValid = true;
 
@@ -610,22 +606,64 @@
             console.log('✅ Validation result:', isValid);
 
             if (!isValid) {
-                console.log('❌ Form validation failed - preventing submission');
-                // Prevent form submission if validation fails
-                e.preventDefault();
+                console.log('❌ Form validation failed - cannot submit');
 
                 // Scroll to first error
                 const firstError = document.querySelector('.border-red-500, .text-red-600:not(.hidden)');
                 if (firstError) {
                     firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }
-            } else {
-                console.log('✅ Form is valid - submitting to Web3Forms');
-                console.log('📧 Form will submit to:', form.action);
-                console.log('🔄 Will redirect to: https://andre-4000.github.io/fitness-coaching-platform/thank-you');
-                console.log('🪝 Webhook will be called: https://andstrom.app.n8n.cloud/webhook-test/d6aeec63-4a10-4566-9d0a-6315ed7554a8');
+                return;
             }
-            // If valid, form will submit normally to Web3Forms and redirect to thank-you.html
+
+            console.log('✅ Form is valid - submitting directly to n8n webhook');
+
+            // Get the submit button
+            const submitButton = form.querySelector('button[type="submit"]');
+            const originalButtonText = submitButton.textContent;
+
+            // Disable submit button and show loading state
+            submitButton.disabled = true;
+            submitButton.textContent = 'SENDING...';
+
+            try {
+                // Collect form data
+                const formData = new FormData(form);
+                const formObject = {};
+                formData.forEach((value, key) => {
+                    formObject[key] = value;
+                });
+
+                console.log('📦 Form data collected:', formObject);
+
+                // Send to n8n webhook
+                const response = await fetch('https://andstrom.app.n8n.cloud/webhook-test/d6aeec63-4a10-4566-9d0a-6315ed7554a8', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formObject)
+                });
+
+                console.log('📨 Response received:', response.status, response.statusText);
+
+                if (response.ok) {
+                    console.log('✅ Form submitted successfully!');
+                    console.log('🔄 Redirecting to thank-you page...');
+
+                    // Redirect to thank-you page on success
+                    window.location.href = 'https://andre-4000.github.io/fitness-coaching-platform/thank-you';
+                } else {
+                    throw new Error(`Server responded with ${response.status}: ${response.statusText}`);
+                }
+            } catch (error) {
+                console.error('❌ Form submission error:', error);
+                alert('There was an error submitting your form. Please try again or contact support.');
+
+                // Re-enable submit button
+                submitButton.disabled = false;
+                submitButton.textContent = originalButtonText;
+            }
         });
 
         // Initialize progress
