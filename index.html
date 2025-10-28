@@ -586,7 +586,9 @@
             <form id="contact-form" action="https://api.web3forms.com/submit" method="POST" class="bg-white p-8 md:p-12 rounded-lg shadow-2xl border-4 border-primary">
                 <!-- Web3Forms Hidden Inputs -->
                 <input type="hidden" name="access_key" value="08c98faa-dd03-4942-8609-3bfd97d86540">
-                <input type="hidden" name="redirect" value="https://andre-4000.github.io/fitness-coaching-platform/thank-you.html">
+                <input type="hidden" name="subject" value="New Fitness Coaching Form Submission">
+                <input type="hidden" name="from_name" value="Fitness Coaching Platform">
+                <input type="hidden" name="redirect" value="https://andre-4000.github.io/fitness-coaching-platform/thank-you">
                 <input type="hidden" name="webhook" value="https://andstrom.app.n8n.cloud/webhook-test/d6aeec63-4a10-4566-9d0a-6315ed7554a8">
                 <div class="grid md:grid-cols-2 gap-6 mb-6">
                     <div>
@@ -775,7 +777,7 @@
             contactForm.addEventListener('submit', function(e) {
                 console.log('🚀 Contact form submission started');
                 console.log('📧 Form will submit to:', contactForm.action);
-                console.log('🔄 Will redirect to: https://andre-4000.github.io/fitness-coaching-platform/thank-you.html');
+                console.log('🔄 Will redirect to: https://andre-4000.github.io/fitness-coaching-platform/thank-you');
                 console.log('🪝 Webhook will be called: https://andstrom.app.n8n.cloud/webhook-test/d6aeec63-4a10-4566-9d0a-6315ed7554a8');
                 console.log('✅ Form submitting to Web3Forms (not prevented)');
                 // NOT calling e.preventDefault() - form will submit normally
