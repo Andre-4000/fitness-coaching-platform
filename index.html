@@ -767,34 +767,20 @@
             });
         });
 
-        // Form submission
+        // Form submission - handled by Web3Forms
+        // The form will automatically submit to Web3Forms and redirect to thank-you.html
+        // Add event listener for debugging
         const contactForm = document.getElementById('contact-form');
-
-        contactForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-
-            // Get form data
-            const formData = {
-                name: document.getElementById('name').value,
-                email: document.getElementById('email').value,
-                goals: document.getElementById('goals').value,
-                experience: document.getElementById('experience').value,
-                equipment: document.getElementById('equipment').value,
-                training_days: document.getElementById('training_days').value,
-                primary_goal: document.getElementById('primary_goal').value,
-                secondary_goal: document.getElementById('secondary_goal').value,
-                additional_details: document.getElementById('additional_details').value,
-                injuries: document.getElementById('injuries').value,
-                allergies: document.getElementById('allergies').value
-            };
-
-            // Here you would normally send this data to your backend
-            console.log('Form submitted:', formData);
-
-            // Show success message
-            alert('Thank you! Your personalized fitness plan will be sent to your email within minutes.');
-            contactForm.reset();
-        });
+        if (contactForm) {
+            contactForm.addEventListener('submit', function(e) {
+                console.log('🚀 Contact form submission started');
+                console.log('📧 Form will submit to:', contactForm.action);
+                console.log('🔄 Will redirect to: https://andre-4000.github.io/fitness-coaching-platform/thank-you.html');
+                console.log('🪝 Webhook will be called: https://andstrom.app.n8n.cloud/webhook-test/d6aeec63-4a10-4566-9d0a-6315ed7554a8');
+                console.log('✅ Form submitting to Web3Forms (not prevented)');
+                // NOT calling e.preventDefault() - form will submit normally
+            });
+        }
 
         // Smooth scroll animation observer
         const observerOptions = {

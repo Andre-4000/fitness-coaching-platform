@@ -484,8 +484,8 @@
         </div>
     </main>
 
-    <!-- Success Modal -->
-    <div id="successModal" class="hidden fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 px-4">
+    <!-- Success Modal - No longer needed as form redirects to thank-you.html -->
+    <!-- <div id="successModal" class="hidden fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 px-4">
         <div class="bg-white rounded-2xl p-10 max-w-md w-full text-center fade-in shadow-2xl">
             <div class="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
                 <svg class="w-12 h-12 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -494,20 +494,19 @@
             </div>
             <h2 class="text-4xl font-display font-bold text-secondary mb-5 uppercase tracking-wide">Success!</h2>
             <p class="text-gray-700 mb-8 font-medium text-lg">
-                Your personalized fitness plan is being created by our expert coaches. Check your email in the next few minutes for your complete program.
+                Your personalized fitness plan is being created by our expert coaches.
             </p>
             <button onclick="closeModal()" class="gradient-bg text-white px-10 py-4 rounded-lg font-bold text-lg hover:shadow-2xl transition transform hover:scale-105 uppercase tracking-wide">
                 Done
             </button>
         </div>
-    </div>
+    </div> -->
 
     <script>
         // Form validation and submission
         const form = document.getElementById('fitness-form');
         const progressBar = document.getElementById('progress-bar');
         const progressText = document.getElementById('progress-text');
-        const successModal = document.getElementById('successModal');
 
         // Track form completion
         const formFields = [
@@ -556,8 +555,9 @@
             }
         }
 
+        // Form submission with validation
         form.addEventListener('submit', function(e) {
-            e.preventDefault();
+            console.log('🚀 Form submission started');
             let isValid = true;
 
             // Validate full name
@@ -605,51 +605,25 @@
                 fitnessError.classList.add('hidden');
             }
 
-            if (isValid) {
-                // Collect form data
-                const formData = {
-                    fullName: document.getElementById('fullName').value,
-                    email: document.getElementById('email').value,
-                    age: document.getElementById('age').value,
-                    weeklyHours: document.getElementById('weeklyHours').value,
-                    fitnessLevel: fitnessLevel.value,
-                    available_equipment: document.getElementById('available_equipment').value,
-                    training_days: document.getElementById('training_days').value,
-                    primary_goal: document.getElementById('primary_goal').value,
-                    secondary_goal: document.getElementById('secondary_goal').value,
-                    additional_details: document.getElementById('additional_details').value,
-                    injuries: document.getElementById('injuries').value,
-                    dietary: document.getElementById('dietary').value
-                };
+            console.log('✅ Validation result:', isValid);
 
-                // Here you would send the data to your backend
-                console.log('Form submitted:', formData);
+            if (!isValid) {
+                console.log('❌ Form validation failed - preventing submission');
+                // Prevent form submission if validation fails
+                e.preventDefault();
 
-                // Show success modal
-                successModal.classList.remove('hidden');
-
-                // Reset form
-                form.reset();
-                updateProgress();
-            } else {
                 // Scroll to first error
                 const firstError = document.querySelector('.border-red-500, .text-red-600:not(.hidden)');
                 if (firstError) {
                     firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }
+            } else {
+                console.log('✅ Form is valid - submitting to Web3Forms');
+                console.log('📧 Form will submit to:', form.action);
+                console.log('🔄 Will redirect to: https://andre-4000.github.io/fitness-coaching-platform/thank-you.html');
+                console.log('🪝 Webhook will be called: https://andstrom.app.n8n.cloud/webhook-test/d6aeec63-4a10-4566-9d0a-6315ed7554a8');
             }
-        });
-
-        function closeModal() {
-            successModal.classList.add('hidden');
-            window.location.href = 'index.html';
-        }
-
-        // Close modal on background click
-        successModal.addEventListener('click', function(e) {
-            if (e.target === successModal) {
-                closeModal();
-            }
+            // If valid, form will submit normally to Web3Forms and redirect to thank-you.html
         });
 
         // Initialize progress
