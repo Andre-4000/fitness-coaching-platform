@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Your EliteFit Program</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f4;">
+
+    <!-- Main Container -->
+    <table role="presentation" style="width: 100%; border-collapse: collapse; background-color: #f4f4f4;">
+        <tr>
+            <td style="padding: 20px 0;">
+
+                <!-- Email Content -->
+                <table role="presentation" style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-collapse: collapse; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+
+                    <!-- Header -->
+                    <tr>
+                        <td style="background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%); padding: 40px 30px; text-align: center;">
+                            <h1 style="margin: 0; color: #ffffff; font-size: 32px; font-weight: bold; letter-spacing: 1px;">
+                                ELITEFIT
+                            </h1>
+                            <p style="margin: 10px 0 0 0; color: #ffffff; font-size: 14px; opacity: 0.95;">
+                                Your Journey to Excellence Starts Here
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- Welcome Section -->
+                    <tr>
+                        <td style="padding: 40px 30px 30px 30px;">
+                            <h2 style="margin: 0 0 15px 0; color: #333333; font-size: 24px;">
+                                Welcome, {{clientName}}!
+                            </h2>
+                            <p style="margin: 0 0 15px 0; color: #666666; font-size: 16px; line-height: 1.6;">
+                                Congratulations on taking the first step towards transforming your fitness! Your personalized program has been carefully crafted to help you achieve your goals.
+                            </p>
+                            <p style="margin: 0; color: #666666; font-size: 16px; line-height: 1.6;">
+                                Below you'll find everything you need to get started, including your custom workout schedule and nutrition guidelines.
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- Program Overview -->
+                    <tr>
+                        <td style="padding: 0 30px 30px 30px;">
+                            <div style="background-color: #fff7f4; border-left: 4px solid #ff6b35; padding: 20px; border-radius: 4px;">
+                                <h3 style="margin: 0 0 10px 0; color: #ff6b35; font-size: 18px;">
+                                    Your Program: {{program}}
+                                </h3>
+                                <p style="margin: 0; color: #666666; font-size: 14px; line-height: 1.5;">
+                                    This program is designed specifically for your fitness level and goals. Follow it consistently for the best results.
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Weekly Workout Schedule -->
+                    <tr>
+                        <td style="padding: 0 30px 30px 30px;">
+                            <h3 style="margin: 0 0 20px 0; color: #333333; font-size: 20px; border-bottom: 2px solid #ff6b35; padding-bottom: 10px;">
+                                Weekly Workout Schedule
+                            </h3>
+
+                            <!-- Day 1 -->
+                            <div style="margin-bottom: 15px; padding: 15px; background-color: #fafafa; border-radius: 4px;">
+                                <h4 style="margin: 0 0 10px 0; color: #ff6b35; font-size: 16px;">
+                                    Monday - Upper Body Strength
+                                </h4>
+                                <ul style="margin: 0; padding-left: 20px; color: #666666; font-size: 14px; line-height: 1.8;">
+                                    <li>Bench Press: 4 sets x 8-10 reps</li>
+                                    <li>Pull-ups: 3 sets x 8-12 reps</li>
+                                    <li>Shoulder Press: 3 sets x 10-12 reps</li>
+                                    <li>Dumbbell Rows: 3 sets x 10 reps each side</li>
+                                </ul>
+                            </div>
+
+                            <!-- Day 2 -->
+                            <div style="margin-bottom: 15px; padding: 15px; background-color: #fafafa; border-radius: 4px;">
+                                <h4 style="margin: 0 0 10px 0; color: #ff6b35; font-size: 16px;">
+                                    Tuesday - Lower Body & Core
+                                </h4>
+                                <ul style="margin: 0; padding-left: 20px; color: #666666; font-size: 14px; line-height: 1.8;">
+                                    <li>Squats: 4 sets x 10-12 reps</li>
+                                    <li>Romanian Deadlifts: 3 sets x 10 reps</li>
+                                    <li>Lunges: 3 sets x 12 reps each leg</li>
+                                    <li>Plank: 3 sets x 60 seconds</li>
+                                </ul>
+                            </div>
+
+                            <!-- Day 3 -->
+                            <div style="margin-bottom: 15px; padding: 15px; background-color: #fafafa; border-radius: 4px;">
+                                <h4 style="margin: 0 0 10px 0; color: #ff6b35; font-size: 16px;">
+                                    Wednesday - Active Recovery
+                                </h4>
+                                <ul style="margin: 0; padding-left: 20px; color: #666666; font-size: 14px; line-height: 1.8;">
+                                    <li>Light cardio: 20-30 minutes</li>
+                                    <li>Stretching & mobility work</li>
+                                    <li>Foam rolling</li>
+                                </ul>
+                            </div>
+
+                            <!-- Day 4 -->
+                            <div style="margin-bottom: 15px; padding: 15px; background-color: #fafafa; border-radius: 4px;">
+                                <h4 style="margin: 0 0 10px 0; color: #ff6b35; font-size: 16px;">
+                                    Thursday - Full Body Circuit
+                                </h4>
+                                <ul style="margin: 0; padding-left: 20px; color: #666666; font-size: 14px; line-height: 1.8;">
+                                    <li>Deadlifts: 3 sets x 8 reps</li>
+                                    <li>Push-ups: 3 sets x 15 reps</li>
+                                    <li>Goblet Squats: 3 sets x 12 reps</li>
+                                    <li>TRX Rows: 3 sets x 12 reps</li>
+                                </ul>
+                            </div>
+
+                            <!-- Day 5 -->
+                            <div style="margin-bottom: 15px; padding: 15px; background-color: #fafafa; border-radius: 4px;">
+                                <h4 style="margin: 0 0 10px 0; color: #ff6b35; font-size: 16px;">
+                                    Friday - HIIT & Conditioning
+                                </h4>
+                                <ul style="margin: 0; padding-left: 20px; color: #666666; font-size: 14px; line-height: 1.8;">
+                                    <li>Burpees: 4 rounds x 30 seconds</li>
+                                    <li>Mountain Climbers: 4 rounds x 30 seconds</li>
+                                    <li>Jump Squats: 4 rounds x 30 seconds</li>
+                                    <li>Rest: 60 seconds between rounds</li>
+                                </ul>
+                            </div>
+
+                            <!-- Weekend -->
+                            <div style="padding: 15px; background-color: #fafafa; border-radius: 4px;">
+                                <h4 style="margin: 0 0 10px 0; color: #ff6b35; font-size: 16px;">
+                                    Weekend - Rest & Recovery
+                                </h4>
+                                <p style="margin: 0; color: #666666; font-size: 14px; line-height: 1.6;">
+                                    Saturday & Sunday: Complete rest or light activities like walking, yoga, or swimming.
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Nutrition Guidelines -->
+                    <tr>
+                        <td style="padding: 0 30px 30px 30px;">
+                            <h3 style="margin: 0 0 20px 0; color: #333333; font-size: 20px; border-bottom: 2px solid #ff6b35; padding-bottom: 10px;">
+                                Nutrition Guidelines
+                            </h3>
+                            <div style="background-color: #f9f9f9; padding: 20px; border-radius: 4px;">
+                                <h4 style="margin: 0 0 15px 0; color: #ff6b35; font-size: 16px;">
+                                    Your Plan: {{nutritionPlan}}
+                                </h4>
+
+                                <div style="margin-bottom: 15px;">
+                                    <p style="margin: 0 0 10px 0; color: #333333; font-size: 14px; font-weight: bold;">
+                                        Daily Macronutrient Targets:
+                                    </p>
+                                    <ul style="margin: 0; padding-left: 20px; color: #666666; font-size: 14px; line-height: 1.8;">
+                                        <li>Protein: 1.6-2.2g per kg of body weight</li>
+                                        <li>Carbohydrates: Moderate intake, focus on pre/post workout</li>
+                                        <li>Healthy Fats: 20-30% of total calories</li>
+                                        <li>Hydration: Minimum 2-3 liters of water daily</li>
+                                    </ul>
+                                </div>
+
+                                <div style="margin-bottom: 15px;">
+                                    <p style="margin: 0 0 10px 0; color: #333333; font-size: 14px; font-weight: bold;">
+                                        Meal Timing:
+                                    </p>
+                                    <ul style="margin: 0; padding-left: 20px; color: #666666; font-size: 14px; line-height: 1.8;">
+                                        <li>Pre-workout: Complex carbs + protein (1-2 hours before)</li>
+                                        <li>Post-workout: Protein + simple carbs (within 30-60 minutes)</li>
+                                        <li>Regular meals: 3-5 balanced meals throughout the day</li>
+                                    </ul>
+                                </div>
+
+                                <div>
+                                    <p style="margin: 0 0 10px 0; color: #333333; font-size: 14px; font-weight: bold;">
+                                        Recommended Foods:
+                                    </p>
+                                    <ul style="margin: 0; padding-left: 20px; color: #666666; font-size: 14px; line-height: 1.8;">
+                                        <li>Lean proteins: Chicken, fish, turkey, eggs, Greek yogurt</li>
+                                        <li>Complex carbs: Brown rice, quinoa, sweet potatoes, oats</li>
+                                        <li>Healthy fats: Avocado, nuts, olive oil, fatty fish</li>
+                                        <li>Vegetables: Dark leafy greens, broccoli, peppers, carrots</li>
+                                        <li>Fruits: Berries, bananas, apples (in moderation)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Exercise Instructions -->
+                    <tr>
+                        <td style="padding: 0 30px 30px 30px;">
+                            <h3 style="margin: 0 0 20px 0; color: #333333; font-size: 20px; border-bottom: 2px solid #ff6b35; padding-bottom: 10px;">
+                                Exercise Instructions & Tips
+                            </h3>
+
+                            <div style="background-color: #fff7f4; padding: 20px; border-radius: 4px; margin-bottom: 15px;">
+                                <h4 style="margin: 0 0 10px 0; color: #ff6b35; font-size: 16px;">
+                                    Form First, Weight Second
+                                </h4>
+                                <p style="margin: 0; color: #666666; font-size: 14px; line-height: 1.6;">
+                                    Always prioritize proper form over lifting heavier weights. Start with lighter weights to master the movement pattern, then gradually increase the load.
+                                </p>
+                            </div>
+
+                            <div style="background-color: #fff7f4; padding: 20px; border-radius: 4px; margin-bottom: 15px;">
+                                <h4 style="margin: 0 0 10px 0; color: #ff6b35; font-size: 16px;">
+                                    Progressive Overload
+                                </h4>
+                                <p style="margin: 0; color: #666666; font-size: 14px; line-height: 1.6;">
+                                    Aim to increase weight, reps, or sets gradually each week. Even small improvements compound over time to create significant results.
+                                </p>
+                            </div>
+
+                            <div style="background-color: #fff7f4; padding: 20px; border-radius: 4px; margin-bottom: 15px;">
+                                <h4 style="margin: 0 0 10px 0; color: #ff6b35; font-size: 16px;">
+                                    Rest Periods
+                                </h4>
+                                <p style="margin: 0; color: #666666; font-size: 14px; line-height: 1.6;">
+                                    Strength training: 2-3 minutes between sets. Hypertrophy: 60-90 seconds. HIIT/Circuit: 30-60 seconds or as specified.
+                                </p>
+                            </div>
+
+                            <div style="background-color: #fff7f4; padding: 20px; border-radius: 4px; margin-bottom: 15px;">
+                                <h4 style="margin: 0 0 10px 0; color: #ff6b35; font-size: 16px;">
+                                    Warm-Up & Cool-Down
+                                </h4>
+                                <p style="margin: 0; color: #666666; font-size: 14px; line-height: 1.6;">
+                                    Always spend 5-10 minutes warming up before training and 5-10 minutes cooling down after. This reduces injury risk and improves recovery.
+                                </p>
+                            </div>
+
+                            <div style="background-color: #fff7f4; padding: 20px; border-radius: 4px;">
+                                <h4 style="margin: 0 0 10px 0; color: #ff6b35; font-size: 16px;">
+                                    Listen to Your Body
+                                </h4>
+                                <p style="margin: 0; color: #666666; font-size: 14px; line-height: 1.6;">
+                                    Some muscle soreness is normal, but sharp pain is not. If something doesn't feel right, stop the exercise and consult with a professional.
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Contact Support -->
+                    <tr>
+                        <td style="padding: 0 30px 30px 30px;">
+                            <div style="background-color: #333333; padding: 25px; border-radius: 4px; text-align: center;">
+                                <h3 style="margin: 0 0 15px 0; color: #ff6b35; font-size: 18px;">
+                                    Need Help or Have Questions?
+                                </h3>
+                                <p style="margin: 0 0 15px 0; color: #ffffff; font-size: 14px; line-height: 1.6;">
+                                    Our team is here to support you every step of the way. Don't hesitate to reach out if you need guidance, modifications, or have any concerns.
+                                </p>
+                                <a href="mailto:support@elitefit.com" style="display: inline-block; background-color: #ff6b35; color: #ffffff; padding: 12px 30px; text-decoration: none; border-radius: 4px; font-weight: bold; font-size: 14px;">
+                                    Contact Support
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Footer -->
+                    <tr>
+                        <td style="background-color: #f9f9f9; padding: 30px; text-align: center; border-top: 1px solid #eeeeee;">
+                            <p style="margin: 0 0 15px 0; color: #999999; font-size: 12px; line-height: 1.6;">
+                                This program was created exclusively for {{clientName}}
+                            </p>
+                            <p style="margin: 0 0 20px 0; color: #666666; font-size: 14px; font-style: italic; line-height: 1.6;">
+                                "The only bad workout is the one that didn't happen."
+                            </p>
+                            <p style="margin: 0 0 5px 0; color: #999999; font-size: 12px;">
+                                EliteFit | Your Partner in Fitness Excellence
+                            </p>
+                            <p style="margin: 0; color: #999999; font-size: 12px;">
+                                <a href="mailto:support@elitefit.com" style="color: #ff6b35; text-decoration: none;">support@elitefit.com</a>
+                            </p>
+                        </td>
+                    </tr>
+
+                </table>
+
+            </td>
+        </tr>
+    </table>
+
+</body>
+</html>
