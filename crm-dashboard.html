@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EliteFit CRM Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FF6B00',
+                        secondary: '#1a1a1a',
+                    },
+                    fontFamily: {
+                        'display': ['Bebas Neue', 'Arial Black', 'sans-serif'],
+                        'body': ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-pending { background-color: #FEF3C7; color: #92400E; }
+        .status-sent { background-color: #DBEAFE; color: #1E40AF; }
+        .status-active { background-color: #D1FAE5; color: #065F46; }
+        .status-inactive { background-color: #FEE2E2; color: #991B1B; }
+        .status-followup { background-color: #FCE7F3; color: #9F1239; }
+
+        .modal-backdrop {
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: #FFF5F0;
+            cursor: pointer;
+        }
+
+        .note-item {
+            border-left: 3px solid #FF6B00;
+            background-color: #FFF5F0;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            border-radius: 0.5rem;
+        }
+
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Login Screen -->
+    <div id="login-screen" class="min-h-screen flex items-center justify-center bg-secondary px-4">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 md:p-12 max-w-md w-full fade-in">
+            <div class="text-center mb-8">
+                <h1 class="text-5xl font-display font-bold text-secondary mb-2 tracking-wider">
+                    ELITE<span class="text-primary">FIT</span>
+                </h1>
+                <p class="text-gray-600 font-semibold">CRM Dashboard</p>
+            </div>
+
+            <div class="mb-6">
+                <label for="password" class="block text-sm font-bold text-secondary mb-2 uppercase">Password</label>
+                <input
+                    type="password"
+                    id="password"
+                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition"
+                    placeholder="Enter password"
+                    onkeypress="if(event.key === 'Enter') login()"
+                >
+                <p id="login-error" class="text-red-600 text-sm mt-2 font-semibold hidden">Incorrect password</p>
+            </div>
+
+            <button
+                onclick="login()"
+                class="w-full bg-primary text-white px-8 py-4 font-bold text-lg hover:bg-opacity-90 transition uppercase tracking-wide rounded-lg shadow-lg hover:shadow-xl"
+            >
+                Access Dashboard
+            </button>
+
+            <div class="mt-6 p-4 bg-gray-50 rounded-lg">
+                <p class="text-xs text-gray-600 font-medium">
+                    <strong>Demo Password:</strong> admin123
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Dashboard -->
+    <div id="dashboard" class="hidden">
+        <!-- Header -->
+        <header class="bg-secondary shadow-xl sticky top-0 z-40">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h1 class="text-3xl font-display font-bold text-white tracking-wider">
+                            ELITE<span class="text-primary">FIT</span> <span class="text-gray-400 text-xl">CRM</span>
+                        </h1>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <button onclick="exportToCSV()" class="hidden md:flex items-center space-x-2 bg-primary text-white px-4 py-2 rounded-lg font-semibold hover:bg-opacity-90 transition">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            <span>Export CSV</span>
+                        </button>
+                        <button onclick="logout()" class="flex items-center space-x-2 bg-gray-700 text-white px-4 py-2 rounded-lg font-semibold hover:bg-gray-600 transition">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                            </svg>
+                            <span>Logout</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Content -->
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-primary">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-semibold text-gray-600 uppercase">Total Clients</p>
+                            <p class="text-3xl font-display font-bold text-secondary" id="stat-total">0</p>
+                        </div>
+                        <div class="bg-primary bg-opacity-10 p-3 rounded-lg">
+                            <svg class="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-blue-500">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-semibold text-gray-600 uppercase">Active</p>
+                            <p class="text-3xl font-display font-bold text-secondary" id="stat-active">0</p>
+                        </div>
+                        <div class="bg-blue-100 p-3 rounded-lg">
+                            <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-yellow-500">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-semibold text-gray-600 uppercase">Pending</p>
+                            <p class="text-3xl font-display font-bold text-secondary" id="stat-pending">0</p>
+                        </div>
+                        <div class="bg-yellow-100 p-3 rounded-lg">
+                            <svg class="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-pink-500">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-semibold text-gray-600 uppercase">Follow-up</p>
+                            <p class="text-3xl font-display font-bold text-secondary" id="stat-followup">0</p>
+                        </div>
+                        <div class="bg-pink-100 p-3 rounded-lg">
+                            <svg class="w-8 h-8 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search and Filter -->
+            <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+                <div class="flex flex-col md:flex-row gap-4">
+                    <div class="flex-1">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Search Clients</label>
+                        <div class="relative">
+                            <input
+                                type="text"
+                                id="search-input"
+                                placeholder="Search by name or email..."
+                                class="w-full px-4 py-3 pl-10 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition"
+                                oninput="filterClients()"
+                            >
+                            <svg class="w-5 h-5 text-gray-400 absolute left-3 top-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="md:w-64">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Filter by Status</label>
+                        <select
+                            id="status-filter"
+                            class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition font-semibold"
+                            onchange="filterClients()"
+                        >
+                            <option value="all">All Statuses</option>
+                            <option value="pending">Pending</option>
+                            <option value="sent">Program Sent</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                            <option value="followup">Follow-up Needed</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Client List Table -->
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200 table-hover">
+                        <thead class="bg-secondary">
+                            <tr>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Name</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Email</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider hidden md:table-cell">Goal</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider hidden lg:table-cell">Sign-up Date</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider hidden xl:table-cell">Last Contact</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="clients-tbody" class="bg-white divide-y divide-gray-200">
+                            <!-- Client rows will be inserted here -->
+                        </tbody>
+                    </table>
+                </div>
+                <div id="no-results" class="hidden text-center py-12">
+                    <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <p class="text-gray-500 font-semibold">No clients found</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Client Detail Modal -->
+    <div id="client-modal" class="hidden fixed inset-0 z-50 overflow-y-auto modal-backdrop" onclick="closeModalOnBackdrop(event)">
+        <div class="flex items-center justify-center min-h-screen px-4">
+            <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden fade-in" onclick="event.stopPropagation()">
+                <!-- Modal Header -->
+                <div class="bg-secondary px-6 py-5 flex justify-between items-center sticky top-0">
+                    <h2 class="text-2xl font-display font-bold text-white tracking-wide" id="modal-client-name">Client Details</h2>
+                    <button onclick="closeModal()" class="text-white hover:text-primary transition">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Modal Body -->
+                <div class="p-6 overflow-y-auto scrollbar-hide" style="max-height: calc(90vh - 80px);">
+                    <!-- Client Info Grid -->
+                    <div class="grid md:grid-cols-2 gap-6 mb-8">
+                        <div>
+                            <h3 class="text-sm font-bold text-gray-600 uppercase mb-4">Contact Information</h3>
+                            <div class="space-y-3">
+                                <div>
+                                    <p class="text-xs font-semibold text-gray-500 uppercase">Email</p>
+                                    <p class="text-gray-900 font-semibold" id="modal-email">-</p>
+                                </div>
+                                <div>
+                                    <p class="text-xs font-semibold text-gray-500 uppercase">Sign-up Date</p>
+                                    <p class="text-gray-900 font-semibold" id="modal-signup-date">-</p>
+                                </div>
+                                <div>
+                                    <p class="text-xs font-semibold text-gray-500 uppercase">Last Contact</p>
+                                    <p class="text-gray-900 font-semibold" id="modal-last-contact">-</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 class="text-sm font-bold text-gray-600 uppercase mb-4">Program Details</h3>
+                            <div class="space-y-3">
+                                <div>
+                                    <p class="text-xs font-semibold text-gray-500 uppercase">Fitness Goal</p>
+                                    <p class="text-gray-900 font-semibold" id="modal-goal">-</p>
+                                </div>
+                                <div>
+                                    <p class="text-xs font-semibold text-gray-500 uppercase">Status</p>
+                                    <select id="modal-status" onchange="updateClientStatus()" class="mt-1 px-3 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition font-semibold">
+                                        <option value="pending">Pending</option>
+                                        <option value="sent">Program Sent</option>
+                                        <option value="active">Active</option>
+                                        <option value="inactive">Inactive</option>
+                                        <option value="followup">Follow-up Needed</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Additional Details -->
+                    <div class="mb-8">
+                        <h3 class="text-sm font-bold text-gray-600 uppercase mb-4">Additional Information</h3>
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <div class="grid md:grid-cols-2 gap-4 text-sm">
+                                <div>
+                                    <p class="text-xs font-semibold text-gray-500 uppercase">Age</p>
+                                    <p class="text-gray-900 font-semibold" id="modal-age">-</p>
+                                </div>
+                                <div>
+                                    <p class="text-xs font-semibold text-gray-500 uppercase">Experience Level</p>
+                                    <p class="text-gray-900 font-semibold" id="modal-experience">-</p>
+                                </div>
+                                <div>
+                                    <p class="text-xs font-semibold text-gray-500 uppercase">Equipment</p>
+                                    <p class="text-gray-900 font-semibold" id="modal-equipment">-</p>
+                                </div>
+                                <div>
+                                    <p class="text-xs font-semibold text-gray-500 uppercase">Training Days</p>
+                                    <p class="text-gray-900 font-semibold" id="modal-training-days">-</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Notes Section -->
+                    <div>
+                        <h3 class="text-sm font-bold text-gray-600 uppercase mb-4">Notes & Communication Log</h3>
+
+                        <!-- Add Note Form -->
+                        <div class="mb-4">
+                            <textarea
+                                id="new-note"
+                                rows="3"
+                                placeholder="Add a note about this client..."
+                                class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition resize-none"
+                            ></textarea>
+                            <button onclick="addNote()" class="mt-2 bg-primary text-white px-6 py-2 rounded-lg font-semibold hover:bg-opacity-90 transition">
+                                Add Note
+                            </button>
+                        </div>
+
+                        <!-- Notes List -->
+                        <div id="notes-container" class="space-y-3 max-h-96 overflow-y-auto scrollbar-hide">
+                            <!-- Notes will be inserted here -->
+                        </div>
+                        <div id="no-notes" class="text-center py-8 text-gray-500 font-medium">
+                            No notes yet. Add your first note above.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========================================
+        // CONFIGURATION & GLOBALS
+        // ========================================
+        const PASSWORD = 'admin123'; // Change this for production
+        let currentClientId = null;
+        let clients = [];
+
+        // ========================================
+        // AUTHENTICATION
+        // ========================================
+        function login() {
+            const password = document.getElementById('password').value;
+            const error = document.getElementById('login-error');
+
+            if (password === PASSWORD) {
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('dashboard').classList.remove('hidden');
+                loadClients();
+                updateStats();
+            } else {
+                error.classList.remove('hidden');
+                document.getElementById('password').value = '';
+            }
+        }
+
+        function logout() {
+            document.getElementById('dashboard').classList.add('hidden');
+            document.getElementById('login-screen').classList.remove('hidden');
+            document.getElementById('password').value = '';
+        }
+
+        // ========================================
+        // DATA MANAGEMENT (Easy to replace with API)
+        // ========================================
+        function initializeSampleData() {
+            const sampleClients = [
+                {
+                    id: 1,
+                    name: 'Sarah Johnson',
+                    email: 'sarah.johnson@email.com',
+                    goal: 'Weight Loss & Toning',
+                    signupDate: '2025-01-15',
+                    status: 'active',
+                    lastContact: '2025-01-28',
+                    age: 32,
+                    experience: 'Beginner',
+                    equipment: 'Full Commercial Gym',
+                    trainingDays: '4-5 days per week',
+                    notes: [
+                        { date: '2025-01-28', text: 'Client completed first week successfully. Showed great dedication.' },
+                        { date: '2025-01-22', text: 'Sent personalized program. Client very motivated.' }
+                    ]
+                },
+                {
+                    id: 2,
+                    name: 'Michael Chen',
+                    email: 'michael.chen@email.com',
+                    goal: 'Muscle Building (Hypertrophy)',
+                    signupDate: '2025-01-20',
+                    status: 'sent',
+                    lastContact: '2025-01-20',
+                    age: 28,
+                    experience: 'Intermediate',
+                    equipment: 'Well-Equipped Home Gym',
+                    trainingDays: '6-7 days per week',
+                    notes: [
+                        { date: '2025-01-20', text: 'Program sent. Awaiting feedback.' }
+                    ]
+                },
+                {
+                    id: 3,
+                    name: 'Emma Williams',
+                    email: 'emma.williams@email.com',
+                    goal: 'General Fitness & Health',
+                    signupDate: '2025-01-25',
+                    status: 'pending',
+                    lastContact: '2025-01-25',
+                    age: 45,
+                    experience: 'Beginner',
+                    equipment: 'Basic Home Gym',
+                    trainingDays: '2-3 days per week',
+                    notes: []
+                },
+                {
+                    id: 4,
+                    name: 'David Martinez',
+                    email: 'david.martinez@email.com',
+                    goal: 'Strength & Power',
+                    signupDate: '2025-01-10',
+                    status: 'active',
+                    lastContact: '2025-01-29',
+                    age: 35,
+                    experience: 'Advanced',
+                    equipment: 'Full Commercial Gym',
+                    trainingDays: '6-7 days per week',
+                    notes: [
+                        { date: '2025-01-29', text: 'Increased squat PR by 20lbs. Excellent progress!' },
+                        { date: '2025-01-22', text: 'Form check completed. All exercises looking solid.' },
+                        { date: '2025-01-15', text: 'Started Phase 2 of strength program.' }
+                    ]
+                },
+                {
+                    id: 5,
+                    name: 'Jessica Brown',
+                    email: 'jessica.brown@email.com',
+                    goal: 'Athletic Performance',
+                    signupDate: '2025-01-12',
+                    status: 'followup',
+                    lastContact: '2025-01-18',
+                    age: 27,
+                    experience: 'Intermediate',
+                    equipment: 'Full Commercial Gym',
+                    trainingDays: '4-5 days per week',
+                    notes: [
+                        { date: '2025-01-18', text: 'No response to last 2 emails. Need to follow up.' }
+                    ]
+                },
+                {
+                    id: 6,
+                    name: 'James Taylor',
+                    email: 'james.taylor@email.com',
+                    goal: 'Fat Loss & Definition',
+                    signupDate: '2024-12-20',
+                    status: 'inactive',
+                    lastContact: '2025-01-05',
+                    age: 41,
+                    experience: 'Beginner',
+                    equipment: 'Bodyweight Only',
+                    trainingDays: '2-3 days per week',
+                    notes: [
+                        { date: '2025-01-05', text: 'Client stopped responding. Marked as inactive.' },
+                        { date: '2024-12-28', text: 'Completed 1 week of program.' }
+                    ]
+                },
+                {
+                    id: 7,
+                    name: 'Lisa Anderson',
+                    email: 'lisa.anderson@email.com',
+                    goal: 'Rehabilitation & Recovery',
+                    signupDate: '2025-01-28',
+                    status: 'pending',
+                    lastContact: '2025-01-28',
+                    age: 52,
+                    experience: 'Beginner',
+                    equipment: 'Basic Home Gym',
+                    trainingDays: 'Flexible schedule',
+                    notes: [
+                        { date: '2025-01-28', text: 'New sign-up. Has lower back issues. Creating modified program.' }
+                    ]
+                },
+                {
+                    id: 8,
+                    name: 'Robert Wilson',
+                    email: 'robert.wilson@email.com',
+                    goal: 'Endurance & Conditioning',
+                    signupDate: '2025-01-22',
+                    status: 'active',
+                    lastContact: '2025-01-30',
+                    age: 39,
+                    experience: 'Advanced',
+                    equipment: 'Outdoor/Park Training',
+                    trainingDays: '6-7 days per week',
+                    notes: [
+                        { date: '2025-01-30', text: 'Training for marathon. Added extra cardio sessions.' },
+                        { date: '2025-01-26', text: 'Completed baseline fitness test. Very strong endurance.' }
+                    ]
+                }
+            ];
+
+            localStorage.setItem('elitefit-clients', JSON.stringify(sampleClients));
+            return sampleClients;
+        }
+
+        function loadClients() {
+            const stored = localStorage.getItem('elitefit-clients');
+            if (stored) {
+                clients = JSON.parse(stored);
+            } else {
+                clients = initializeSampleData();
+            }
+            renderClients(clients);
+        }
+
+        function saveClients() {
+            localStorage.setItem('elitefit-clients', JSON.stringify(clients));
+        }
+
+        // For future API integration, replace these functions:
+        // function loadClients() {
+        //     fetch('YOUR_API_ENDPOINT/clients')
+        //         .then(response => response.json())
+        //         .then(data => {
+        //             clients = data;
+        //             renderClients(clients);
+        //         });
+        // }
+        //
+        // function saveClients() {
+        //     fetch('YOUR_API_ENDPOINT/clients', {
+        //         method: 'POST',
+        //         headers: { 'Content-Type': 'application/json' },
+        //         body: JSON.stringify(clients)
+        //     });
+        // }
+
+        // ========================================
+        // UI RENDERING
+        // ========================================
+        function renderClients(clientList) {
+            const tbody = document.getElementById('clients-tbody');
+            const noResults = document.getElementById('no-results');
+
+            if (clientList.length === 0) {
+                tbody.innerHTML = '';
+                noResults.classList.remove('hidden');
+                return;
+            }
+
+            noResults.classList.add('hidden');
+            tbody.innerHTML = clientList.map(client => `
+                <tr onclick="openClientModal(${client.id})" class="transition">
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm font-bold text-gray-900">${client.name}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">${client.email}</div>
+                    </td>
+                    <td class="px-6 py-4 hidden md:table-cell">
+                        <div class="text-sm text-gray-900">${client.goal}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap hidden lg:table-cell">
+                        <div class="text-sm text-gray-900">${formatDate(client.signupDate)}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        ${getStatusBadge(client.status)}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap hidden xl:table-cell">
+                        <div class="text-sm text-gray-900">${formatDate(client.lastContact)}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <button onclick="event.stopPropagation(); openClientModal(${client.id})" class="text-primary hover:text-opacity-80 font-semibold">
+                            View Details
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function getStatusBadge(status) {
+            const statusMap = {
+                pending: 'Pending',
+                sent: 'Program Sent',
+                active: 'Active',
+                inactive: 'Inactive',
+                followup: 'Follow-up Needed'
+            };
+            return `<span class="status-badge status-${status}">${statusMap[status]}</span>`;
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+
+        // ========================================
+        // STATS
+        // ========================================
+        function updateStats() {
+            const total = clients.length;
+            const active = clients.filter(c => c.status === 'active').length;
+            const pending = clients.filter(c => c.status === 'pending').length;
+            const followup = clients.filter(c => c.status === 'followup').length;
+
+            document.getElementById('stat-total').textContent = total;
+            document.getElementById('stat-active').textContent = active;
+            document.getElementById('stat-pending').textContent = pending;
+            document.getElementById('stat-followup').textContent = followup;
+        }
+
+        // ========================================
+        // SEARCH & FILTER
+        // ========================================
+        function filterClients() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const statusFilter = document.getElementById('status-filter').value;
+
+            let filtered = clients;
+
+            // Filter by search term
+            if (searchTerm) {
+                filtered = filtered.filter(client =>
+                    client.name.toLowerCase().includes(searchTerm) ||
+                    client.email.toLowerCase().includes(searchTerm)
+                );
+            }
+
+            // Filter by status
+            if (statusFilter !== 'all') {
+                filtered = filtered.filter(client => client.status === statusFilter);
+            }
+
+            renderClients(filtered);
+        }
+
+        // ========================================
+        // MODAL MANAGEMENT
+        // ========================================
+        function openClientModal(clientId) {
+            currentClientId = clientId;
+            const client = clients.find(c => c.id === clientId);
+            if (!client) return;
+
+            // Populate modal fields
+            document.getElementById('modal-client-name').textContent = client.name;
+            document.getElementById('modal-email').textContent = client.email;
+            document.getElementById('modal-signup-date').textContent = formatDate(client.signupDate);
+            document.getElementById('modal-last-contact').textContent = formatDate(client.lastContact);
+            document.getElementById('modal-goal').textContent = client.goal;
+            document.getElementById('modal-status').value = client.status;
+            document.getElementById('modal-age').textContent = client.age || 'N/A';
+            document.getElementById('modal-experience').textContent = client.experience || 'N/A';
+            document.getElementById('modal-equipment').textContent = client.equipment || 'N/A';
+            document.getElementById('modal-training-days').textContent = client.trainingDays || 'N/A';
+
+            // Render notes
+            renderNotes(client.notes || []);
+
+            // Show modal
+            document.getElementById('client-modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('client-modal').classList.add('hidden');
+            currentClientId = null;
+            document.getElementById('new-note').value = '';
+        }
+
+        function closeModalOnBackdrop(event) {
+            if (event.target.id === 'client-modal') {
+                closeModal();
+            }
+        }
+
+        // ========================================
+        // NOTES MANAGEMENT
+        // ========================================
+        function renderNotes(notes) {
+            const container = document.getElementById('notes-container');
+            const noNotes = document.getElementById('no-notes');
+
+            if (!notes || notes.length === 0) {
+                container.classList.add('hidden');
+                noNotes.classList.remove('hidden');
+                return;
+            }
+
+            noNotes.classList.add('hidden');
+            container.classList.remove('hidden');
+
+            container.innerHTML = notes.map((note, index) => `
+                <div class="note-item">
+                    <div class="flex justify-between items-start mb-2">
+                        <p class="text-xs font-bold text-gray-500 uppercase">${formatDate(note.date)}</p>
+                        <button onclick="deleteNote(${index})" class="text-red-600 hover:text-red-800 text-xs font-semibold">Delete</button>
+                    </div>
+                    <p class="text-gray-900">${note.text}</p>
+                </div>
+            `).join('');
+        }
+
+        function addNote() {
+            const noteText = document.getElementById('new-note').value.trim();
+            if (!noteText) return;
+
+            const client = clients.find(c => c.id === currentClientId);
+            if (!client) return;
+
+            if (!client.notes) {
+                client.notes = [];
+            }
+
+            const newNote = {
+                date: new Date().toISOString().split('T')[0],
+                text: noteText
+            };
+
+            client.notes.unshift(newNote); // Add to beginning
+            client.lastContact = newNote.date; // Update last contact
+
+            saveClients();
+            renderNotes(client.notes);
+            updateStats();
+            filterClients();
+
+            document.getElementById('new-note').value = '';
+        }
+
+        function deleteNote(index) {
+            if (!confirm('Delete this note?')) return;
+
+            const client = clients.find(c => c.id === currentClientId);
+            if (!client) return;
+
+            client.notes.splice(index, 1);
+            saveClients();
+            renderNotes(client.notes);
+        }
+
+        // ========================================
+        // STATUS MANAGEMENT
+        // ========================================
+        function updateClientStatus() {
+            const newStatus = document.getElementById('modal-status').value;
+            const client = clients.find(c => c.id === currentClientId);
+
+            if (!client) return;
+
+            client.status = newStatus;
+            client.lastContact = new Date().toISOString().split('T')[0];
+
+            saveClients();
+            updateStats();
+            filterClients();
+        }
+
+        // ========================================
+        // EXPORT TO CSV
+        // ========================================
+        function exportToCSV() {
+            const headers = ['Name', 'Email', 'Goal', 'Sign-up Date', 'Status', 'Last Contact', 'Age', 'Experience', 'Equipment', 'Training Days'];
+
+            const rows = clients.map(client => [
+                client.name,
+                client.email,
+                client.goal,
+                client.signupDate,
+                client.status,
+                client.lastContact,
+                client.age || '',
+                client.experience || '',
+                client.equipment || '',
+                client.trainingDays || ''
+            ]);
+
+            let csv = headers.join(',') + '\n';
+            rows.forEach(row => {
+                csv += row.map(field => `"${field}"`).join(',') + '\n';
+            });
+
+            // Create download
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `elitefit-clients-${new Date().toISOString().split('T')[0]}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }
+
+        // ========================================
+        // KEYBOARD SHORTCUTS
+        // ========================================
+        document.addEventListener('keydown', function(event) {
+            // ESC to close modal
+            if (event.key === 'Escape' && !document.getElementById('client-modal').classList.contains('hidden')) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>

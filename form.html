@@ -175,11 +175,71 @@
                                 name="age"
                                 required
                                 min="16"
-                                max="100"
+                                max="99"
                                 class="w-full px-4 py-4 border-2 border-gray-300 rounded-lg input-focus outline-none transition font-semibold"
-                                placeholder="25"
+                                placeholder="Your age"
                             >
-                            <p class="text-red-600 text-sm mt-2 font-semibold hidden" id="age-error">Please enter your age (16-100)</p>
+                            <p class="text-red-600 text-sm mt-2 font-semibold hidden" id="age-error">Please enter your age (16-99)</p>
+                        </div>
+
+                        <!-- Gender -->
+                        <div>
+                            <label for="gender" class="block text-sm font-bold text-secondary mb-2 uppercase tracking-wide">
+                                Gender <span class="text-primary">*</span>
+                            </label>
+                            <select
+                                id="gender"
+                                name="gender"
+                                required
+                                class="w-full px-4 py-4 border-2 border-gray-300 rounded-lg input-focus outline-none transition font-semibold"
+                            >
+                                <option value="">Select your gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                                <option value="prefer_not_to_say">Prefer not to say</option>
+                            </select>
+                            <p class="text-red-600 text-sm mt-2 font-semibold hidden" id="gender-error">Please select your gender</p>
+                        </div>
+
+                        <!-- Height -->
+                        <div>
+                            <label for="height" class="block text-sm font-bold text-secondary mb-2 uppercase tracking-wide">
+                                Height <span class="text-primary">*</span>
+                            </label>
+                            <div class="flex gap-2">
+                                <input
+                                    type="number"
+                                    id="height"
+                                    name="height"
+                                    required
+                                    class="flex-1 px-4 py-4 border-2 border-gray-300 rounded-lg input-focus outline-none transition font-semibold"
+                                    placeholder="Height in cm"
+                                >
+                                <button type="button" id="height-toggle" class="px-4 py-4 bg-gray-200 hover:bg-gray-300 border-2 border-gray-300 rounded-lg font-bold transition text-sm">cm</button>
+                            </div>
+                            <input type="hidden" id="height-unit" name="height_unit" value="cm">
+                            <p class="text-red-600 text-sm mt-2 font-semibold hidden" id="height-error">Please enter your height</p>
+                        </div>
+
+                        <!-- Weight -->
+                        <div>
+                            <label for="weight" class="block text-sm font-bold text-secondary mb-2 uppercase tracking-wide">
+                                Weight <span class="text-primary">*</span>
+                            </label>
+                            <div class="flex gap-2">
+                                <input
+                                    type="number"
+                                    id="weight"
+                                    name="weight"
+                                    required
+                                    class="flex-1 px-4 py-4 border-2 border-gray-300 rounded-lg input-focus outline-none transition font-semibold"
+                                    placeholder="Weight in kg"
+                                >
+                                <button type="button" id="weight-toggle" class="px-4 py-4 bg-gray-200 hover:bg-gray-300 border-2 border-gray-300 rounded-lg font-bold transition text-sm">kg</button>
+                            </div>
+                            <input type="hidden" id="weight-unit" name="weight_unit" value="kg">
+                            <p class="text-red-600 text-sm mt-2 font-semibold hidden" id="weight-error">Please enter your weight</p>
                         </div>
 
                         <!-- Weekly Availability -->
@@ -506,7 +566,7 @@
 
         // Track form completion
         const formFields = [
-            'fullName', 'email', 'age', 'weeklyHours',
+            'fullName', 'email', 'age', 'gender', 'height', 'weight', 'weeklyHours',
             'fitnessLevel', 'available_equipment', 'training_days', 'primary_goal'
         ];
 
@@ -570,7 +630,22 @@
 
             // Validate age
             isValid &= validateField('age', 'age-error',
-                field => field.value >= 16 && field.value <= 100
+                field => field.value >= 16 && field.value <= 99
+            );
+
+            // Validate gender
+            isValid &= validateField('gender', 'gender-error',
+                field => field.value !== ''
+            );
+
+            // Validate height
+            isValid &= validateField('height', 'height-error',
+                field => field.value > 0
+            );
+
+            // Validate weight
+            isValid &= validateField('weight', 'weight-error',
+                field => field.value > 0
             );
 
             // Validate weekly hours
@@ -665,6 +740,74 @@
                 submitButton.textContent = originalButtonText;
             }
         });
+
+        // Height unit toggle
+        const heightToggle = document.getElementById('height-toggle');
+        const heightInput = document.getElementById('height');
+        const heightUnit = document.getElementById('height-unit');
+        let heightInCm = true;
+
+        if (heightToggle) {
+            heightToggle.addEventListener('click', function() {
+                const currentValue = parseFloat(heightInput.value);
+
+                if (heightInCm) {
+                    // Convert cm to inches
+                    if (currentValue) {
+                        const totalInches = currentValue / 2.54;
+                        heightInput.value = Math.round(totalInches);
+                    }
+                    heightInput.placeholder = 'Height in inches';
+                    heightToggle.textContent = 'in';
+                    heightUnit.value = 'inches';
+                    heightInCm = false;
+                } else {
+                    // Convert inches to cm
+                    if (currentValue) {
+                        const cm = currentValue * 2.54;
+                        heightInput.value = Math.round(cm);
+                    }
+                    heightInput.placeholder = 'Height in cm';
+                    heightToggle.textContent = 'cm';
+                    heightUnit.value = 'cm';
+                    heightInCm = true;
+                }
+            });
+        }
+
+        // Weight unit toggle
+        const weightToggle = document.getElementById('weight-toggle');
+        const weightInput = document.getElementById('weight');
+        const weightUnit = document.getElementById('weight-unit');
+        let weightInKg = true;
+
+        if (weightToggle) {
+            weightToggle.addEventListener('click', function() {
+                const currentValue = parseFloat(weightInput.value);
+
+                if (weightInKg) {
+                    // Convert kg to lbs
+                    if (currentValue) {
+                        const lbs = currentValue * 2.20462;
+                        weightInput.value = Math.round(lbs);
+                    }
+                    weightInput.placeholder = 'Weight in lbs';
+                    weightToggle.textContent = 'lbs';
+                    weightUnit.value = 'lbs';
+                    weightInKg = false;
+                } else {
+                    // Convert lbs to kg
+                    if (currentValue) {
+                        const kg = currentValue / 2.20462;
+                        weightInput.value = Math.round(kg);
+                    }
+                    weightInput.placeholder = 'Weight in kg';
+                    weightToggle.textContent = 'kg';
+                    weightUnit.value = 'kg';
+                    weightInKg = true;
+                }
+            });
+        }
 
         // Initialize progress
         updateProgress();
